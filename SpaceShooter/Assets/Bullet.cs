@@ -1,16 +1,26 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public float flySpeed;
+    public float flySpeed = 12f;
+    public int damage = 1;
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        var newPosition = transform.position;
-        newPosition.y += Time.deltaTime * flySpeed;
-        transform.position = newPosition;
+        transform.Translate(Vector3.up * flySpeed * Time.deltaTime);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // Đúng theo slide: tìm EnemyHealth
+        var enemy = collision.GetComponent<EnemyHealth>();
+        if (enemy != null)
+        {
+            enemy.TakeDamage(damage);
+            Destroy(gameObject); // đạn biến mất sau khi trúng
+        }
     }
 }
+
